@@ -1,18 +1,32 @@
-﻿using System;
+﻿using log4net;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace MegaprimesFinder
 {
     class Engine
     {
+        public static Stopwatch stopWatch;
+        readonly ILog _log;
+        readonly ILog _errorLog;
+        public Engine(ILog Log, ILog ErrorLog)
+        {
+            _log = Log;
+            _errorLog = ErrorLog;
+        }
         public List<uint> GetMegaprimeNumbers(uint max)
         {
+            stopWatch = Stopwatch.StartNew();
+            _log.Info("Stopwatch started");
             var megaprimenumbers = new List<uint>();
             for (int i = 1; i <= max; i++)
             {
                 if (IsMegaprime(i))
                     megaprimenumbers.Add(Convert.ToUInt32(i));
             }
+            stopWatch.Stop();
+            _log.Info($"Total engine elapses time {stopWatch.ElapsedMilliseconds} milliseconds");
             return megaprimenumbers;
         }
 

@@ -1,11 +1,21 @@
-﻿using MegaprimesFinder.Constants;
+﻿using log4net;
+using MegaprimesFinder.Constants;
 using MegaprimesFinder.DataHandlers;
 using System;
+using System.Diagnostics;
 
 namespace MegaprimesFinder
 {
     class Program
     {
+        public static ILog Log;
+        public static ILog ErrorLog;
+        static Program()
+        {
+            log4net.Config.XmlConfigurator.Configure();
+            Log = LogManager.GetLogger("info");
+            ErrorLog = LogManager.GetLogger("error");
+        }
         static void Main(string[] args)
         {
             var text = new UIText();
@@ -13,8 +23,8 @@ namespace MegaprimesFinder
             {
                 Console.WriteLine(text.ProblemDefinition);
 
-                var megaprimesDataHandler = new DataHandler();
-                var megaprimesData = megaprimesDataHandler.getData();
+                var megaprimesDataHandler = new MegaprimesHandler(Log, ErrorLog);
+                var megaprimesData = megaprimesDataHandler.GetData();
 
                 while (megaprimesData.Numbers.Count == 0)
                 {
@@ -22,7 +32,7 @@ namespace MegaprimesFinder
                     Console.WriteLine(text.NoMegaprimeNumbers(megaprimesData.ValidInput));
                     Console.WriteLine(text.ProblemDefinition);
 
-                    megaprimesData = megaprimesDataHandler.getData();
+                    megaprimesData = megaprimesDataHandler.GetData();
                 }
 
                 Console.Clear();
@@ -33,7 +43,6 @@ namespace MegaprimesFinder
                     Console.WriteLine(number);
                 }
             }
-
         }
     }
 }

@@ -53,3 +53,7 @@ dkms.conf
 *.vsidx
 *.suo
 .vs
+*.config
+*.log
+*/bin/*
+*/obj/*

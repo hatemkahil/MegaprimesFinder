@@ -1,23 +1,28 @@
-﻿using MegaprimesFinder.Constants;
+﻿using log4net;
+using MegaprimesFinder.Constants;
 using MegaprimesFinder.Models;
 using System;
 
 namespace MegaprimesFinder.DataHandlers
 {
-    public class DataHandler
+    public class MegaprimesHandler
     {
         readonly InputVerificationHandler inputVerificationHandler;
-        readonly Engine engine;
+        Engine engine;
         readonly MegaprimesData megaprimesData;
+        readonly ILog _log;
+        readonly ILog _errorLog;
 
-        public DataHandler()
+        public MegaprimesHandler(ILog Log, ILog ErrorLog)
         {
             inputVerificationHandler = new InputVerificationHandler();
-            engine = new Engine();
             megaprimesData = new MegaprimesData();
+            engine = new Engine(Log, ErrorLog);
+            _log = Log;
+            _errorLog = ErrorLog;
         }
 
-        public MegaprimesData getData()
+        public MegaprimesData GetData()
         {
             var text = new UIText();
 
