@@ -2,77 +2,122 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MegaprimesFinder
 {
     class Engine
     {
         public static Stopwatch stopWatch;
-        readonly ILog _log;
-        readonly ILog _errorLog;
+        private readonly ILog _log;
+        private readonly ILog _errorLog;
+        private IEnumerable<int> _numbers;
+        private List<uint> _megaprimeNumbers;
+        private IntHelpers _helpers;
         public Engine(ILog Log, ILog ErrorLog)
         {
             _log = Log;
             _errorLog = ErrorLog;
+            _numbers = new List<int>();
+            _helpers = new IntHelpers();
         }
         public List<uint> GetMegaprimeNumbers(uint max)
         {
             stopWatch = Stopwatch.StartNew();
-            _log.Info("Stopwatch started");
-            var megaprimenumbers = new List<uint>();
-            for (int i = 1; i <= max; i++)
-            {
-                if (IsMegaprime(i))
-                    megaprimenumbers.Add(Convert.ToUInt32(i));
-            }
+            _log.Info($"Stopwatch started for {max} input");
+            _megaprimeNumbers = new List<uint>();
+            var Numbers = Enumerable.Range(1, Convert.ToInt32(max)).ToList();
+
+            var partitions = _helpers.GroupNumbers(Numbers);
+            FindMegaprimesInParallel(partitions);
+
+
             stopWatch.Stop();
-            _log.Info($"Total engine elapses time {stopWatch.ElapsedMilliseconds} milliseconds");
-            return megaprimenumbers;
+            _log.Info($"Total engine elapse time {stopWatch.ElapsedMilliseconds} milliseconds");
+            return _megaprimeNumbers;
+        }
+        void FindMegaprimesInParallel(List<IEnumerable<int>> partitions)
+        {
+            List<List<int>> megaprimesListsList = new();
+
+            var count = 0;
+            Parallel.ForEach(partitions, partition =>
+            {
+                count++;
+                var part = partition;
+                megaprimesListsList.Add(FindMegaprimesAndAddToList(part, Convert.ToInt32(Task.CurrentId)));
+            }
+            );
+
+
+
+            foreach (var megaprimesList in megaprimesListsList)
+            {
+                foreach (var megaprimes in megaprimesList)
+                {
+                    _megaprimeNumbers.Add(Convert.ToUInt32(megaprimes));
+                }
+            }
+            _megaprimeNumbers.Sort();
+        }
+
+        List<int> FindMegaprimesAndAddToList(IEnumerable<int> numbers, int index)
+        {
+            _log.Info($"{index} MegaprimesToList started");
+            List<int> list = new List<int>();
+            foreach (var number in numbers)
+            {
+                if (IsMegaprime(number))
+                    list.Add(number);
+            }
+            _log.Info($"{index} MegaprimesToList completed");
+            return list;
         }
 
         bool IsMegaprime(int number)
         {
-            if (!IsPrime(number))
-                return false;
-
-
-            var digitlist = digitSplitter(number);
+            var digitlist = _helpers.digitSplitter(number);
 
             foreach (var digit in digitlist)
             {
-                if (!IsPrime(digit))
+                if (!DigitIsPrime(digit))
                     return false;
             }
+
+            if (!IsPrime(number))
+                return false;
             return true;
         }
 
-        bool IsPrime(int digit)
+        bool DigitIsPrime(int digit)
+        {
+            switch (digit)
+            {
+                case 2:
+                    return true;
+                case 3:
+                    return true;
+                case 5:
+                    return true;
+                case 7:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+        //TODO check if you can somehow reduce the amount of running the below loop by saving numbers and carrying on from where you were left
+        bool IsPrime(int number)
         {
             int numberOfDivisions = 0;
-            for (int i = 1; i <= digit; i++)
+            for (int i = 1; i <= number; i++)
             {
-                if (digit % i == 0)
+                if (number % i == 0)
                 {
                     numberOfDivisions++;
                 }
             }
             return numberOfDivisions == 2;
-        }
-
-        List<int> digitSplitter(int number)
-        {
-            var digitList = new List<int>();
-            var num = number;
-            while (num > 0) //do till num greater than  0
-            {
-                int mod = num % 10; //split last digit from number
-                num = num / 10; //divide num by 10. num /= 10 also a valid one 
-                digitList.Add(mod);
-            }
-
-            digitList.Reverse();
-
-            return digitList;
         }
     }
 }
