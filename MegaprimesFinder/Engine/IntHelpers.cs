@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MegaprimesFinder
+namespace MegaprimesFinder.Engine
 {
     class IntHelpers
     {
@@ -24,14 +24,14 @@ namespace MegaprimesFinder
             return digitList;
         }
         //TODO check different numbers below see if it effects speed
-        public List<IEnumerable<int>> GroupNumbers (List<int> numbers)
+        public List<IEnumerable<int>> GroupNumbers(List<int> numbers)
         {
             int divideBy = 0;
             if (numbers.Max() < 100)
                 divideBy = 1;
             else
                 divideBy = 100;
-           
+
             return numbers.Partition(divideBy).ToList();
         }
     }

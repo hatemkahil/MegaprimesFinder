@@ -5,9 +5,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MegaprimesFinder
+namespace MegaprimesFinder.Engine
 {
-    class Engine
+    public class MegaprimesEngine
     {
         public static Stopwatch stopWatch;
         private readonly ILog _log;
@@ -15,7 +15,7 @@ namespace MegaprimesFinder
         private IEnumerable<int> _numbers;
         private List<uint> _megaprimeNumbers;
         private IntHelpers _helpers;
-        public Engine(ILog Log, ILog ErrorLog)
+        public MegaprimesEngine(ILog Log, ILog ErrorLog)
         {
             _log = Log;
             _errorLog = ErrorLog;

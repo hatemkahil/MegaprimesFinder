@@ -1,8 +1,6 @@
 ﻿using log4net;
-using MegaprimesFinder.Constants;
-using MegaprimesFinder.DataHandlers;
 using System;
-using System.Diagnostics;
+using MegaprimesFinder.UserInteractionInputValidation;
 
 namespace MegaprimesFinder
 {
@@ -14,35 +12,30 @@ namespace MegaprimesFinder
         {
             log4net.Config.XmlConfigurator.Configure();
             Log = LogManager.GetLogger("info");
-            ErrorLog = LogManager.GetLogger("error");
+            ErrorLog = LogManager.GetLogger("error"); 
         }
         static void Main(string[] args)
         {
-            var text = new UIText();
+            var processor = new Processor(Log, ErrorLog);
+            var write = new Write();
+
             while (!(Console.KeyAvailable))
             {
-                Console.WriteLine(text.ProblemDefinition);
-
-                var megaprimesDataHandler = new MegaprimesHandler(Log, ErrorLog);
-                var megaprimesData = megaprimesDataHandler.GetData();
+                write.Problem();
+                                
+                var megaprimesData= processor.GetMegaprimesFromValidData();
 
                 while (megaprimesData.Numbers.Count == 0)
                 {
-                    Console.Clear();
-                    Console.WriteLine(text.NoMegaprimeNumbers(megaprimesData.ValidInput));
-                    Console.WriteLine(text.ProblemDefinition);
+                    write.NoMegaprimesFor(megaprimesData.Input);
 
-                    megaprimesData = megaprimesDataHandler.GetData();
+                    megaprimesData = processor.GetMegaprimesFromValidData();
                 }
 
-                Console.Clear();
-                Console.WriteLine(text.Complete);
-                Console.WriteLine(text.MegaprimeNumbers(megaprimesData.ValidInput, megaprimesData.Numbers.Count));
-                foreach (var number in megaprimesData.Numbers)
-                {
-                    Console.WriteLine(number);
-                }
+                write.SuccessMessageWithMegaprimeNumbers(megaprimesData); 
             }
         }
+
+        
     }
 }

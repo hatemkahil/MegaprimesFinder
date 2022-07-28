@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MegaprimesFinder
+namespace MegaprimesFinder.Engine
 {
     public static class Extensions
     {
