@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MegaprimesFinder.Engine
+namespace MegaprimesFinder.Engine.Helpers
 {
     class IntHelpers
     {
@@ -29,6 +29,8 @@ namespace MegaprimesFinder.Engine
             int divideBy = 0;
             if (numbers.Max() < 100)
                 divideBy = 1;
+            else if (numbers.Max() > 10000)
+                divideBy = 1000;
             else
                 divideBy = 100;
 
