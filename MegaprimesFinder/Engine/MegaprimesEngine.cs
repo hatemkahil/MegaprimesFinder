@@ -42,7 +42,11 @@ namespace MegaprimesFinder.Engine
             List<List<int>> megaprimesListsList = new();
 
             var count = 0;
-            Parallel.ForEach(partitions, partition =>
+            //For debbugging purposes
+            const bool forceNonParallel = false;
+            var options = new ParallelOptions { MaxDegreeOfParallelism = forceNonParallel ? 1 : -1 };
+            //-------
+            Parallel.ForEach(partitions, options, partition =>
             {
                 count++;
                 var part = partition;
@@ -109,15 +113,12 @@ namespace MegaprimesFinder.Engine
         //TODO check if you can somehow reduce the amount of running the below loop by saving numbers and carrying on from where you were left
         bool IsPrime(int number)
         {
-            int numberOfDivisions = 0;
-            for (int i = 1; i <= number; i++)
+            for (int i = 2; i < number; i++)
             {
                 if (number % i == 0)
-                {
-                    numberOfDivisions++;
-                }
+                    return false;
             }
-            return numberOfDivisions == 2;
+            return true;
         }
     }
 }
