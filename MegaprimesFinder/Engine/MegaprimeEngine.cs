@@ -13,7 +13,7 @@ namespace MegaprimesFinder.Engine
         public bool IsMegaprime(int number)
         {
             var helpers = new IntHelpers();
-            var digitlist = helpers.digitSplitter(number);
+            var digitlist = helpers.DigitSplitter(number);
 
             foreach (var digit in digitlist)
             {

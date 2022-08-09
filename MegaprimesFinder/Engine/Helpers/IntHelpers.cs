@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace MegaprimesFinder.Engine.Helpers
 {
-    class IntHelpers
+    public class IntHelpers
     {
-        public List<int> digitSplitter(int number)
+        public List<int> DigitSplitter(int number)
         {
             var digitList = new List<int>();
             var num = number;
