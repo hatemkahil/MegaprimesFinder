@@ -1,7 +1,7 @@
 ﻿using MegaprimesFinder.Constants;
 using System;
 
-namespace MegaprimesFinder.UserInteractionInputValidation
+namespace MegaprimesFinder
 {
     class InputVerificationHandler
     {

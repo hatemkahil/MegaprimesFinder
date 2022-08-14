@@ -2,7 +2,7 @@
 using MegaprimesFinder.Engine.Models;
 using System;
 
-namespace MegaprimesFinder.UserInteractionInputValidation
+namespace MegaprimesFinder.ConsoleWriter
 {
     internal class Write
     {

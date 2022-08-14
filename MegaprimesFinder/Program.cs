@@ -1,6 +1,6 @@
 ﻿using log4net;
+using MegaprimesFinder.ConsoleWriter;
 using System;
-using MegaprimesFinder.UserInteractionInputValidation;
 
 namespace MegaprimesFinder
 {
